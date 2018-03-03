@@ -302,3 +302,7 @@ img {
 div:empty {
   display: none;
 }
+.Title {
+background-color: #36393E !important;
+border-bottom: 1px solid rgba(0,0,0,0.2);
+}
