@@ -69,11 +69,24 @@ $(document).ready(function() {
 		});
 	};
 
-	$.getJSON( 'https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all' ).done(message);
+	function datetime(string) {
+		var datetime = string.split('T');
+
+		var date = datetime[0];
+		var time = datetime[1].replace('Z', '');
+
+		return date + ' ' + time;
+	};
+
+	var newdate = new Date();
+	newdate.setDate(newdate.getDate() - 14);
+	var limiter = newdate.toISOString();
+
+		$.getJSON( 'https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all&labels=incident&since=' + limiter ).done(message);
 
 	function message(issues) {
 		issues.forEach(function(issue) {
-			if( issue.labels.length > 0 ){ // only display labelled issues
+			if( issue.labels.length > 0){ // only display labelled issues
 				var status = issue.labels.reduce(function(status, label) {
 					if (/^status:/.test(label.name)) {
 						return label.name.replace('status:', '');
@@ -90,7 +103,7 @@ $(document).ready(function() {
 
 				if (issue.state === 'open') {
 					$('#panel').data('incident', 'true');
-					$('#panel').attr('class', (status === 'operational' ? 'panel-success' : 'panel-warn') );
+					$('#panel').attr('class', (status !== 'operational' ? 'panel-danger' : 'panel-warning') );
 					$('#paneltitle').html('<a href="#incidents">' + issue.title + '</a>');
 				}
 
@@ -99,6 +112,8 @@ $(document).ready(function() {
 
 				if (issue.state === 'closed') {
 					html += '<div class="timeline-icon bg-success"><i class="entypo-feather"></i></div>';
+				} else if (issue.state === 'open' && status === 'operational'){
+					html += '<div class="timeline-icon bg-warn"><i class="entypo-feather"></i></div>';
 				} else {
 					html += '<div class="timeline-icon bg-secondary"><i class="entypo-feather"></i></div>';
 				}
@@ -110,7 +125,7 @@ $(document).ready(function() {
 				if (issue.state === 'closed') {
 					html += '<span class="badge label-success pull-right">closed</span>';
 				} else {
-					html += '<span class="badge ' + (status === 'operational' ? 'label-success' : 'label-warn') + ' pull-right">';
+					html += '<span class="badge ' + (status !== 'operational' ? 'label-danger' : 'label-warning') + ' pull-right">';
 					html += "open";
 					html += '</span>\n';
 				}
@@ -124,6 +139,10 @@ $(document).ready(function() {
 				html += '<hr>\n';
 				html += '<p>' + issue.body + '</p>\n';
 
+				if (issue.state === 'open' && issue.created_at !== issue.updated_at) {
+				html += '<p><em>Last update ' + datetime(issue.updated_at) + '<p>'
+				}
+
 				if (issue.state === 'closed') {
 					html += '<p><em>Updated ' + datetime(issue.closed_at) + '<br/>';
 					html += 'The system is back in normal operation.</p>';
@@ -134,14 +153,18 @@ $(document).ready(function() {
 				$('#incidents').append(html);
 			}
 		});
-
-		function datetime(string) {
-			var datetime = string.split('T');
-
-			var date = datetime[0];
-			var time = datetime[1].replace('Z', '');
-
-			return date + ' ' + time;
-		};
 	};
+
+		$.getJSON( 'https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all&labels=maintenance' ).done(notification);
+
+function notification(issues) {
+	issues.forEach(function(issue) {
+		if( issue.labels.length > 0 ){ // only display labelled issues
+				$('#maintenance').append('<div class="list-group-item">'+
+									'<h2 class="list-group-item-heading">' + issue.title + '</h2>' +
+									'<p class="list-group-item-text">' + issue.body + '</p>');
+		}
+	});
+};
+
 });
