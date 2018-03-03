@@ -2,16 +2,17 @@ $(document).ready(function() {
 	var config = {
 		uptimerobot: {
 			api_keys: [
-				'm776590650-e291a9a509ce82dc719350d6',
-				'm776590666-a657ffa8828aea401e337879',
-				'm776590648-36bde29bdc0b551f8ea18b88',
-				'm778556460-a25f70740ba97f693ea2ac5d',
-				'm776590646-e51287a02018f0947feda64a'
+				'm779828614-2b8e76a1f638f179db6f01be',
+				'm779757287-11996787b4a4ddb79cae343b',
+				'm779757278-82acbbedc86d26ebbc129945',
+				'm779762016-33deea24d6a3e73e524d8ab0',
+				'm779870719-a710902a0c001a03244eac5e',
+				'm779870718-eada06ba00200d8ced148b37'
 			],
 			logs: 1
 		},
 		github: {
-			org: 'flybaseio',
+			org: '1activegeek',
 			repo: 'status'
 		}
 	};
