@@ -2,7 +2,7 @@
 
 This is a simple status page to show an overview of your sites. The goal here was to create a simple, free, remote monitoring capabilty. The plan was to create something easily modified for use to show current open issues, setup notices of maintenance windows, and obviously show the current UP status of sites. This work is not originally done by me, but I like to think I've improved on and fixed previous works by others. 
 
-This is based off the work of @flybaseio in their repo here: [status](https://github.com/flybaseio/status) which is originally based on [statuspage](https://github.com/pyupio/statuspage) by @pyupio. Please feel free to fork, modify, and help improve! 
+This is based off [status](https://github.com/flybaseio/status) by @flybaseio which is originally based on [statuspage](https://github.com/pyupio/statuspage) by @pyupio. Please feel free to fork, modify, and help improve! 
 
 ## Features
 
@@ -31,7 +31,8 @@ This is one of the main alterations from the original project. I've done away wi
 
 The core functionality of creating incidents and maintenance notifications, is managed by the creation of issues on Github for the repo that will serve up the page. The basic idea here is that the page is setup to run javascript on every render. This js will query GitHub for the list of issues. Based on certain labels, they will be listed in the corresponding sections. Times will be updated appropriately as well to allow folks to see/know when the latest update to issues was posted as well. 
 
-So there are currently 3 label mechanisms employed here. Please remember that one of the first 1 labels MUST be added to the issue, or you won't see it on your page at all. 
+If you wish to update the incident with new information, adjust the details, etc - you will need to EDIT your original issue title/comment. These are the only details provided in the API calls, and thus are required to show the pertinent information. There are currently 3 label mechanisms employed here. Please remember that one of the first 2 labels MUST be added to the issue, or you won't see it on your page at all. 
+
 - `incident` - This is used to create an incident in the bottom timeline. This is the main goal here to communicate information around outages. 
 - `maintenance` - This is used to create a maintenance notification. The idea is that you can easily create a notice to let users know when there is going to be downtime.
 - `system:<name>` - This is used along with the incident label, to indicate a specific system that the incident corresponds to. While not necessary, sometimes it's a quick/easy way to correlate issues to a specific service. Simply substitute `<name>` with an appropriate name to match the service experiencing problems. Multiple of these tags can be used for each incident as well. 
