@@ -1,15 +1,19 @@
 <!doctype html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Service status for mixflix.org">
+	<meta name="description" content="Service status">
 	<meta name="robots" content="index, follow">
+	<meta http-equiv="refresh" content="300">
 	<title>Mix-Flix Status</title>
-<!-- styles -->
-	<link rel="stylesheet" href="style.css">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	 crossorigin="anonymous">
+	<link rel="stylesheet" href="style.css?v=20180304">
 </head>
+
 <body>
 <div class="container">
 	<header>
@@ -22,20 +26,32 @@
 	</div>
 	<h4 class="page-header">Systems Status</h4>
 	<div class="list-group" id="services"></div>
-
-<!-- Need to work on hiding this section if no maintenance scheduled -->
 	<h4 class="page-header">Upcoming Maintenance</h4>
 	<div class="list-group" id="maintenance"></div>
-
 	<h4 class="page-header">Incidents</h4>
 	<div class="timeline-centered" id="incidents"></div>
-
-	<h4 class="page-header">Uptime History</h4>
-	<div style="overflow:hidden;height:512px">
-		<embed style="height: calc(100% - 100px);overflow: hidden;" width='100%' src='https://uptime.statuscake.com/?TestID=Vu8RSWvAyw' />
-  </div>
-<!-- scripts -->
-	<script src="//code.jquery.com/jquery.min.js"></script>
-	<script src="script.js?v=20171111.b"></script>
+	<h4 class="page-header">Statistics</h4>
+	<div class="table-responsive" id="statistics">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>1 Day</th>
+					<th>7 Days</th>
+					<th>14 Days</th>
+					<th>30 Days</th>
+					<th>Lifetime</th>
+					<th>Avg. Response (ms)</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+ crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" integrity="sha256-XF29CBwU1MWLaGEnsELogU6Y6rcc5nCkhhx89nFMIDQ="
+ crossorigin="anonymous"></script>
+<script src="script.js?v=20180304"></script>
 </body>
+
 </html>
