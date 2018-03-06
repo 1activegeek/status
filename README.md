@@ -5,7 +5,7 @@ This is a simple status page to show an overview of your sites. The goal here wa
 
 This is based off [status](https://github.com/flybaseio/status) by [@flybaseio](https://github.com/flybaseio) which is originally based on [statuspage](https://github.com/jayfk/statuspage) by [@jayfk](https://github.com/jayfk). Please feel free to fork, modify, and help improve! 
 
-Large thanks to @vertig0ne for the help with adapting this. More credit due to him for manipulation of the code so far. 
+Large thanks to [@vertig0ne](https://github.com/veritg0ne) for the help with adapting this. More credit due to him for manipulation of the code so far. 
 
 ## Features
 
