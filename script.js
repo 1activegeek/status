@@ -81,8 +81,6 @@ $(document).ready(function () {
 			'<td>' + monitor.uptime_ratio[1] + '%</td>' +
 			'<td>' + monitor.uptime_ratio[2] + '%</td>' +
 			'<td>' + monitor.uptime_ratio[3] + '%</td>' +
-			'<td>' + monitor.uptime_ratio[4] + '%</td>' +
-			'<td>' + monitor.average_response_time + '</td>' +
 			'</tr>');
 
 		const gph_data = {
@@ -141,7 +139,11 @@ $(document).ready(function () {
 		});
 	};
 
-	$.getJSON('https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all').done(GitHubEntry);
+	var get_today = new Date();
+	get_today.setDate(get_today.getDate() - 14);
+	var scope_date = get_today.toISOString();
+
+	$.getJSON('https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all&since=' + scope_date).done(GitHubEntry);
 
 	var maintainIssues = [];
 	var incidentIssues = [];
