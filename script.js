@@ -14,7 +14,7 @@ $(document).ready(function () {
 			all_time_uptime_ratio: 1,
 			custom_uptime_ratios: "1-7-14-30",
 			response_times_average: 30,
-			response_times_warning: 600,
+			response_times_warning: 2000,
 		},
 		github: {
 			org: '1activegeek',
@@ -91,7 +91,7 @@ $(document).ready(function () {
 				labels: [],
 				datasets: [{
 					label: 'Response Time (ms)',
-				backgroundColor: "rgba(102,67,220,0.5)",
+				backgroundColor: "rgba(255,255,255,0.5)",
 					data: [],
 				}]
 			},
