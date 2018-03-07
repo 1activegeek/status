@@ -14,13 +14,23 @@ $(document).ready(function () {
 			all_time_uptime_ratio: 1,
 			custom_uptime_ratios: "1-7-14-30",
 			response_times_average: 30,
-			response_times_warning: 2000,
+			response_times_warning: 1500,
 		},
 		github: {
 			org: '1activegeek',
 			repo: 'status'
-		}
+		},
+		theme: 'dark'
 	};
+
+	function setStyleSheet(url){
+		 var stylesheet = document.getElementById("stylesheet");
+		 stylesheet.setAttribute('href', url);
+	}
+
+	if (config.theme == 'light') {
+		setStyleSheet('style-light.css');
+	}
 
 	const status_text = {
 		'operational': 'operational',
@@ -94,7 +104,17 @@ $(document).ready(function () {
 				}]
 			},
 			options: {
+				legend: {
+					labels: {
+						fontColor: '#ddd'
+					}
+				},
 				scales: {
+					yAxes: [{
+						ticks: {
+							fontColor: '#ddd'
+						}
+					}],
 					xAxes: [{
 						display: false,
 						ticks: {
@@ -105,6 +125,12 @@ $(document).ready(function () {
 				}
 			}
 		};
+
+		if (config.theme == 'light') {
+			gph_data.options.scales.yAxes[0].ticks.fontColor = '';
+			gph_data.options.legend.labels.fontColor = '';
+			gph_data.data.datasets[0].backgroundColor = 'rgba(0,0,0,0.5)';
+		}
 
 		monitor.response_times.forEach(function (datapoint) {
 				gph_data.data.labels.push(formatDate(new Date(datapoint.datetime * 1000), 'D d M Y H:i:s (T)'));
