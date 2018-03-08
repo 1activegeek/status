@@ -7,6 +7,10 @@ This is based off [status](https://github.com/flybaseio/status) by [@flybaseio](
 
 Large thanks to [@vertig0ne](https://github.com/vertig0ne) for the help with adapting this. More credit due to him for manipulation of the code so far. 
 
+## Configuration/Usage
+
+Check the [wiki](https://github.com/1activegeek/status/wiki) for details on configuration and usage.
+
 ## Features
 
 * [x] Fetch service status dynamically from REST API using UptimeRobot
