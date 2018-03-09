@@ -18,6 +18,7 @@ Check the [wiki](https://github.com/1activegeek/status/wiki) for details on conf
 * [x] Dynamically display issues as either Incidents or Maintenance
 * [x] Top level notification bar to indicate overall status
 * [x] Only displays up to last 14 days of incidents
+* [x] Select from light or dark theme
 
 ## Work-In-Progress
 * [x] Report no maintenance scheduled if none exist
@@ -30,6 +31,10 @@ Check the [wiki](https://github.com/1activegeek/status/wiki) for details on conf
 * [ ] Validate usability on GitLab - possible load balance through DNS to GL and GH
 * [ ] Button to report an issue if everything ok but having a problem
 * [ ] Subscription button to request getting notifications of status updates (driven by something else)
+* [ ] Custom theme options
+* [ ] Selective timeframe of incidents to show
+* [ ] Choice of showing maintenance windows after they've been closed/past
+* [ ] Selective timeframe of maintenance to show (if choosing to show after window expired)
 
 
 [MIT Licensed](https://raw.githubusercontent.com/flybaseio/status/gh-pages/LICENSE)
