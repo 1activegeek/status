@@ -1,28 +1,6 @@
 $(document).ready(function () {
-	var config = {
-		uptimerobot: {
-			api_keys: [
-				'm779828614-2b8e76a1f638f179db6f01be',
-				'm779757287-11996787b4a4ddb79cae343b',
-				'm779757278-82acbbedc86d26ebbc129945',
-				'm779762016-33deea24d6a3e73e524d8ab0',
-				'm779870719-a710902a0c001a03244eac5e',
-				'm779870718-eada06ba00200d8ced148b37'
-			],
-			logs: 1,
-			response_times: 1,
-			all_time_uptime_ratio: 1,
-			custom_uptime_ratios: "1-7-14-30",
-			response_times_average: 30,
-			response_times_warning: 1500,
-		},
-		github: {
-			org: '1activegeek',
-			repo: 'status'
-		},
-		theme: 'dark'
-	};
 
+// Configuration based settings go here
 	function setStyleSheet(url){
 		 var stylesheet = document.getElementById("stylesheet");
 		 stylesheet.setAttribute('href', url);
@@ -32,12 +10,7 @@ $(document).ready(function () {
 		setStyleSheet('style-light.css');
 	}
 
-	const status_text = {
-		'operational': 'operational',
-		'investigating': 'investigating',
-		'major outage': 'outage',
-		'degraded performance': 'degraded',
-	};
+// UptimeRobot based queries below
 
 	const monitors = config.uptimerobot.api_keys;
 	for (let i in monitors) {
@@ -55,17 +28,17 @@ $(document).ready(function () {
 
 	function _uptimeRobotSetStatus(check) {
 			check.class = check.status === 2 ? 'label-success' : 'label-danger';
-			check.text = check.status === 2 ? 'operational' : 'major outage';
+			check.text = check.status === 2 ? 'operational' : 'outage';
 			if (check.status !== 2 && !check.lasterrortime) {
 				check.lasterrortime = Date.now();
 			}
 			if (check.status === 2 && Date.now() - (check.lasterrortime * 1000) <= 86400000) {
-			check.class = 'label-danger';
-			check.text = 'major outage';
-		}
-		if (check.status === 2 && Math.round(check.average_response_time) >= config.uptimerobot.response_times_warning) {
+				check.class = 'label-danger';
+				check.text = 'outage';
+			}
+			if (check.status === 2 && Math.round(check.average_response_time) >= config.uptimerobot.response_times_warning) {
 				check.class = 'label-warning';
-				check.text = 'degraded performance';
+				check.text = 'degraded';
 			}
 			return check;
 	}
@@ -165,6 +138,58 @@ $(document).ready(function () {
 		});
 	};
 
+// Functions for Healthchecks.io go below
+
+	const hcio_monitors = config.hcio.checks;
+	for (let i in monitors) {
+		var api_key = monitors[i];
+		$.post('https://api.uptimerobot.com/v2/getMonitors', {
+			"api_key": api_key,
+			"format": "json",
+		}, UptimeRobot, 'json');
+	}
+
+	function _hcioSetStatus(check) {
+			check.class = check.status === "up" ? 'label-success' : 'label-danger';
+			check.text = check.status === "up" ? 'operational' : 'outage';
+			return check;
+	}
+
+	function _hcioSetData(monitor) {
+		const clean_name = monitor.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
+
+			$('#services').append('<div class="list-group-item">' +
+			'<span class="badge ' + monitor.class + '">' + monitor.text + '</span>' +
+			'<a href="#" class="list-group-item-heading" onclick="\$\(\'\#' + monitor.clean_name + '\').toggleClass(\'collapse\');">' + monitor.friendly_name + '</a>' +
+			'<div id="' + monitor.clean_name + '" class="graph collapse">' +
+			'<canvas id="' + monitor.clean_name + '_cvs" width="400" height="150"></canvas>' +
+				'</div>' +
+				'</div>');
+	}
+
+	function HCio(data) {
+		data.monitors = data.monitors.map(_uptimeRobotSetStatus);
+
+		var status = data.monitors.reduce(function (status, check) {
+			return check.status !== "up" ? 'danger' : 'operational';
+		}, 'operational');
+
+		if (!$('#panel').data('incident')) {
+			$('#panel').attr('class', (status === 'operational' ? 'panel-success' : 'panel-warning') );
+			$('#paneltitle').html(status === 'operational' ? 'All systems are operational.' : 'One or more systems inoperative');
+		}
+
+		data.monitors.forEach(function (item) {
+			item.clean_name = item.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
+			item.uptime_ratio = item.custom_uptime_ratio.split('-');
+			item.uptime_ratio.push(item.all_time_uptime_ratio);
+			_uptimeRobotSetData(item);
+			_uptimeRobotSetGraph(item);
+		});
+	};
+
+// Functions for setting incidents/maintenance go below
+
 	var get_today = new Date();
 	get_today.setDate(get_today.getDate() - 14);
 	var scope_date = get_today.toISOString();
@@ -184,10 +209,10 @@ $(document).ready(function () {
 			}
 		});
 		_gitHubIncidents(incidentIssues);
-		_gitHubMaintainance();
+		_gitHubMaintenance();
 	}
 
-	function _gitHubMaintainance() {
+	function _gitHubMaintenance() {
 		if (maintainIssues.length > 0) {
 			maintainIssues.forEach(function (issue) {
 				$('#maintenance').append('<div class="list-group-item">' +
