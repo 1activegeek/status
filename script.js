@@ -10,143 +10,141 @@ $(document).ready(function () {
 		setStyleSheet('style-light.css');
 	}
 
-// UptimeRobot based queries below
-
-	const monitors = config.uptimerobot.api_keys;
-	for (let i in monitors) {
-		var api_key = monitors[i];
-		$.post('https://api.uptimerobot.com/v2/getMonitors', {
-			"api_key": api_key,
-			"format": "json",
-			"logs": config.uptimerobot.logs,
-			"response_times": config.uptimerobot.response_times,
-			"all_time_uptime_ratio": config.uptimerobot.all_time_uptime_ratio,
-			"custom_uptime_ratios": config.uptimerobot.custom_uptime_ratios,
-			"response_times_average": config.uptimerobot.response_times_average
-		}, UptimeRobot, 'json');
-	}
-
-	function _uptimeRobotSetStatus(check) {
-			check.class = check.status === 2 ? 'label-success' : 'label-danger';
-			check.text = check.status === 2 ? 'operational' : 'outage';
-			if (check.status !== 2 && !check.lasterrortime) {
-				check.lasterrortime = Date.now();
-			}
-			if (check.status === 2 && Date.now() - (check.lasterrortime * 1000) <= 86400000) {
-				check.class = 'label-danger';
-				check.text = 'outage';
-			}
-			if (check.status === 2 && Math.round(check.average_response_time) >= config.uptimerobot.response_times_warning) {
-				check.class = 'label-warning';
-				check.text = 'degraded';
-			}
-			return check;
-	}
-
-	function _uptimeRobotSetData(monitor) {
-		const clean_name = monitor.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
-		const uptime_ratio = monitor.custom_uptime_ratio.split('-');
-		const uptimeForever = monitor.all_time_uptime_ratio;
-
-			$('#services').append('<div class="list-group-item">' +
-			'<span class="badge ' + monitor.class + '">' + monitor.text + '</span>' +
-			'<a href="#" class="list-group-item-heading" onclick="\$\(\'\#' + monitor.clean_name + '\').toggleClass(\'collapse\');">' + monitor.friendly_name + '</a>' +
-			'<div id="' + monitor.clean_name + '" class="graph collapse">' +
-			'<canvas id="' + monitor.clean_name + '_cvs" width="400" height="150"></canvas>' +
-				'</div>' +
-				'</div>');
-	}
-
-	function _uptimeRobotSetGraph(monitor) {
-			$('#statistics tbody').append('<tr>' +
-			'<td>' + monitor.friendly_name + '</td>' +
-			'<td>' + monitor.uptime_ratio[0] + '%</td>' +
-			'<td>' + monitor.uptime_ratio[1] + '%</td>' +
-			'<td>' + monitor.uptime_ratio[2] + '%</td>' +
-			'<td>' + monitor.uptime_ratio[3] + '%</td>' +
-			'</tr>');
-
-		const gph_data = {
-			type: 'line',
-			data: {
-				labels: [],
-				datasets: [{
-					label: 'Response Time (ms)',
-				backgroundColor: "rgba(255,255,255,0.5)",
-					data: [],
-				}]
-			},
-			options: {
-				legend: {
-					labels: {
-						fontColor: '#ddd'
-					}
-				},
-				scales: {
-					yAxes: [{
-						ticks: {
-							fontColor: '#ddd'
-						}
-					}],
-					xAxes: [{
-						display: false,
-						ticks: {
-							display: false,
-							scaleFontSize: 0
-						}
-					}]
-				}
-			}
-		};
-
-		if (config.theme == 'light') {
-			gph_data.options.scales.yAxes[0].ticks.fontColor = '';
-			gph_data.options.legend.labels.fontColor = '';
-			gph_data.data.datasets[0].backgroundColor = 'rgba(0,0,0,0.5)';
-		}
-
-		monitor.response_times.forEach(function (datapoint) {
-				gph_data.data.labels.push(formatDate(new Date(datapoint.datetime * 1000), 'D d M Y H:i:s (T)'));
-				gph_data.data.datasets[0].data.push(datapoint.value);
-			});
-
-			gph_data.data.labels = gph_data.data.labels.reverse();
-			gph_data.data.datasets[0].data = gph_data.data.datasets[0].data.reverse();
-
-		const gph_ctx = $('#' + monitor.clean_name + '_cvs');
-		const gph = new Chart(gph_ctx, gph_data);
-	}
-
-	function UptimeRobot(data) {
-		data.monitors = data.monitors.map(_uptimeRobotSetStatus);
-
-		var status = data.monitors.reduce(function (status, check) {
-			return check.status !== 2 ? 'danger' : 'operational';
-		}, 'operational');
-
-		if (!$('#panel').data('incident')) {
-			$('#panel').attr('class', (status === 'operational' ? 'panel-success' : 'panel-warning') );
-			$('#paneltitle').html(status === 'operational' ? 'All systems are operational.' : 'One or more systems inoperative');
-		}
-
-		data.monitors.forEach(function (item) {
-			item.clean_name = item.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
-			item.uptime_ratio = item.custom_uptime_ratio.split('-');
-			item.uptime_ratio.push(item.all_time_uptime_ratio);
-			_uptimeRobotSetData(item);
-			_uptimeRobotSetGraph(item);
-		});
-	};
+// // UptimeRobot based queries below
+//
+// 	const monitors = config.uptimerobot.api_keys;
+// 	for (let i in monitors) {
+// 		var api_key = monitors[i];
+// 		$.post('https://api.uptimerobot.com/v2/getMonitors', {
+// 			"api_key": api_key,
+// 			"format": "json",
+// 			"logs": config.uptimerobot.logs,
+// 			"response_times": config.uptimerobot.response_times,
+// 			"all_time_uptime_ratio": config.uptimerobot.all_time_uptime_ratio,
+// 			"custom_uptime_ratios": config.uptimerobot.custom_uptime_ratios,
+// 			"response_times_average": config.uptimerobot.response_times_average
+// 		}, UptimeRobot, 'json');
+// 	}
+//
+// 	function _uptimeRobotSetStatus(check) {
+// 			check.class = check.status === 2 ? 'label-success' : 'label-danger';
+// 			check.text = check.status === 2 ? 'operational' : 'outage';
+// 			if (check.status !== 2 && !check.lasterrortime) {
+// 				check.lasterrortime = Date.now();
+// 			}
+// 			if (check.status === 2 && Date.now() - (check.lasterrortime * 1000) <= 86400000) {
+// 				check.class = 'label-danger';
+// 				check.text = 'outage';
+// 			}
+// 			if (check.status === 2 && Math.round(check.average_response_time) >= config.uptimerobot.response_times_warning) {
+// 				check.class = 'label-warning';
+// 				check.text = 'degraded';
+// 			}
+// 			return check;
+// 	}
+//
+// 	function _uptimeRobotSetData(monitor) {
+// 		const clean_name = monitor.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
+// 		const uptime_ratio = monitor.custom_uptime_ratio.split('-');
+// 		const uptimeForever = monitor.all_time_uptime_ratio;
+//
+// 			$('#services').append('<div class="list-group-item">' +
+// 			'<span class="badge ' + monitor.class + '">' + monitor.text + '</span>' +
+// 			'<a href="#" class="list-group-item-heading" onclick="\$\(\'\#' + monitor.clean_name + '\').toggleClass(\'collapse\');">' + monitor.friendly_name + '</a>' +
+// 			'<div id="' + monitor.clean_name + '" class="graph collapse">' +
+// 			'<canvas id="' + monitor.clean_name + '_cvs" width="400" height="150"></canvas>' +
+// 				'</div>' +
+// 				'</div>');
+// 	}
+//
+// 	function _uptimeRobotSetGraph(monitor) {
+// 			$('#statistics tbody').append('<tr>' +
+// 			'<td>' + monitor.friendly_name + '</td>' +
+// 			'<td>' + monitor.uptime_ratio[0] + '%</td>' +
+// 			'<td>' + monitor.uptime_ratio[1] + '%</td>' +
+// 			'<td>' + monitor.uptime_ratio[2] + '%</td>' +
+// 			'<td>' + monitor.uptime_ratio[3] + '%</td>' +
+// 			'</tr>');
+//
+// 		const gph_data = {
+// 			type: 'line',
+// 			data: {
+// 				labels: [],
+// 				datasets: [{
+// 					label: 'Response Time (ms)',
+// 				backgroundColor: "rgba(255,255,255,0.5)",
+// 					data: [],
+// 				}]
+// 			},
+// 			options: {
+// 				legend: {
+// 					labels: {
+// 						fontColor: '#ddd'
+// 					}
+// 				},
+// 				scales: {
+// 					yAxes: [{
+// 						ticks: {
+// 							fontColor: '#ddd'
+// 						}
+// 					}],
+// 					xAxes: [{
+// 						display: false,
+// 						ticks: {
+// 							display: false,
+// 							scaleFontSize: 0
+// 						}
+// 					}]
+// 				}
+// 			}
+// 		};
+//
+// 		if (config.theme == 'light') {
+// 			gph_data.options.scales.yAxes[0].ticks.fontColor = '';
+// 			gph_data.options.legend.labels.fontColor = '';
+// 			gph_data.data.datasets[0].backgroundColor = 'rgba(0,0,0,0.5)';
+// 		}
+//
+// 		monitor.response_times.forEach(function (datapoint) {
+// 				gph_data.data.labels.push(formatDate(new Date(datapoint.datetime * 1000), 'D d M Y H:i:s (T)'));
+// 				gph_data.data.datasets[0].data.push(datapoint.value);
+// 			});
+//
+// 			gph_data.data.labels = gph_data.data.labels.reverse();
+// 			gph_data.data.datasets[0].data = gph_data.data.datasets[0].data.reverse();
+//
+// 		const gph_ctx = $('#' + monitor.clean_name + '_cvs');
+// 		const gph = new Chart(gph_ctx, gph_data);
+// 	}
+//
+// 	function UptimeRobot(data) {
+// 		data.monitors = data.monitors.map(_uptimeRobotSetStatus);
+//
+// 		var status = data.monitors.reduce(function (status, check) {
+// 			return check.status !== 2 ? 'danger' : 'operational';
+// 		}, 'operational');
+//
+// 		if (!$('#panel').data('incident')) {
+// 			$('#panel').attr('class', (status === 'operational' ? 'panel-success' : 'panel-warning') );
+// 			$('#paneltitle').html(status === 'operational' ? 'All systems are operational.' : 'One or more systems inoperative');
+// 		}
+//
+// 		data.monitors.forEach(function (item) {
+// 			item.clean_name = item.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
+// 			item.uptime_ratio = item.custom_uptime_ratio.split('-');
+// 			item.uptime_ratio.push(item.all_time_uptime_ratio);
+// 			_uptimeRobotSetData(item);
+// 			_uptimeRobotSetGraph(item);
+// 		});
+// 	};
 
 // Functions for Healthchecks.io go below
 
 	const hcio_monitors = config.hcio.checks;
-	for (let i in monitors) {
-		var api_key = monitors[i];
-		$.post('https://api.uptimerobot.com/v2/getMonitors', {
-			"api_key": api_key,
-			"format": "json",
-		}, UptimeRobot, 'json');
+	for (let i in hcio_monitors) {
+		var badge = hcio_monitors[i][1];
+		$.post(badge, {
+		}, HCio, 'json');
 	}
 
 	function _hcioSetStatus(check) {
@@ -155,22 +153,23 @@ $(document).ready(function () {
 			return check;
 	}
 
-	function _hcioSetData(monitor) {
-		const clean_name = monitor.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
+	function _hcioSetData(hcio_monitor) {
+		const clean_name = hcio_monitor[i][0];
 
 			$('#services').append('<div class="list-group-item">' +
-			'<span class="badge ' + monitor.class + '">' + monitor.text + '</span>' +
-			'<a href="#" class="list-group-item-heading" onclick="\$\(\'\#' + monitor.clean_name + '\').toggleClass(\'collapse\');">' + monitor.friendly_name + '</a>' +
-			'<div id="' + monitor.clean_name + '" class="graph collapse">' +
-			'<canvas id="' + monitor.clean_name + '_cvs" width="400" height="150"></canvas>' +
+			'<span class="badge ' + hcio_monitor.class + '">' + hcio_monitor.text + '</span>' +
+// I believe this can be removed safely
+			// '<a href="#" class="list-group-item-heading" onclick="\$\(\'\#' + hcio_monitor.clean_name + '\').toggleClass(\'collapse\');">' + hcio_monitor.friendly_name + '</a>' +
+			// '<div id="' + hcio_monitor.clean_name + '" class="graph collapse">' +
+			'<canvas id="' + hcio_monitor.clean_name + '_cvs" width="400" height="150"></canvas>' +
 				'</div>' +
 				'</div>');
 	}
 
 	function HCio(data) {
-		data.monitors = data.monitors.map(_uptimeRobotSetStatus);
+		data.hcio_monitors = data.hcio_monitors.map(_hcioSetStatus);
 
-		var status = data.monitors.reduce(function (status, check) {
+		var status = data.hcio_monitors.reduce(function (status, check) {
 			return check.status !== "up" ? 'danger' : 'operational';
 		}, 'operational');
 
@@ -179,12 +178,9 @@ $(document).ready(function () {
 			$('#paneltitle').html(status === 'operational' ? 'All systems are operational.' : 'One or more systems inoperative');
 		}
 
-		data.monitors.forEach(function (item) {
-			item.clean_name = item.friendly_name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, '');
-			item.uptime_ratio = item.custom_uptime_ratio.split('-');
-			item.uptime_ratio.push(item.all_time_uptime_ratio);
-			_uptimeRobotSetData(item);
-			_uptimeRobotSetGraph(item);
+		data.hcio_monitors.forEach(function (item) {
+			item.clean_name = item[i][0];
+			_hcioSetData(item);
 		});
 	};
 

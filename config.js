@@ -12,7 +12,7 @@ var config = {
     logs: 1,
     response_times: 1,
     all_time_uptime_ratio: 1,
-    custom_uptime_ratios: "1-7-14-30",
+    custom_uptime_ratios: "1-7-14-30", // Not yet implemented?
     response_times_average: 30,
     response_times_warning: 1500,
   },
