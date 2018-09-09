@@ -1,5 +1,5 @@
 var config = {
-  platform: 'uptimerobot', // Use this to choose which platform for monitoring - 'uptimerobot' or 'hcio'
+  platform: 'hcio', // Use this to choose which platform for monitoring - 'uptimerobot' or 'hcio'
   uptimerobot: {
     api_keys: [ // Be sure these are read only API keys, pull one for each monitor
       'm779828614-2b8e76a1f638f179db6f01be',
