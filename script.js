@@ -139,12 +139,14 @@ $(document).ready(function () {
 	// };
 
 // Functions for Healthchecks.io go below
-
 	const hcio_monitors = config.hcio.checks;
 	for (let i in hcio_monitors) {
-		var badge = hcio_monitors[i][1];
-		$.get(badge, {
-		}, HCio, 'json');
+		var badge = hcio_monitors[i].url;
+		console.log('Test ' + badge);
+		$.get(badge, function (response){
+			hcio_monitors[i].status = response.status;
+			console.log(hcio_monitors[i].name);
+		}, 'json');
 	}
 
 	function _hcioSetStatus(check) {
@@ -153,8 +155,8 @@ $(document).ready(function () {
 			return check;
 	}
 
-	function _hcioSetData(hcio_monitor) {
-		const clean_name = hcio_monitor[i][0];
+	function _hcioSetData(hcio_monitors) {
+		const clean_name = hcio_monitors[i][0];
 
 			$('#services').append('<div class="list-group-item">' +
 			'<span class="badge ' + hcio_monitor.class + '">' + hcio_monitor.text + '</span>' +
@@ -167,12 +169,14 @@ $(document).ready(function () {
 	}
 
 	function HCio(data) {
-		data.hcio_monitors = data.hcio_monitors.map(_hcioSetStatus);
+		hcio_monitors.status = data.status;
+		// console.log(badge);
+		data.hcio_monitors = data.map(_hcioSetStatus);
 
 		var status = data.hcio_monitors.reduce(function (status, check) {
 			return check.status !== "up" ? 'danger' : 'operational';
 		}, 'operational');
-
+		// console.log(data.hcio_monitors);
 		if (!$('#panel').data('incident')) {
 			$('#panel').attr('class', (status === 'operational' ? 'panel-success' : 'panel-warning') );
 			$('#paneltitle').html(status === 'operational' ? 'All systems are operational.' : 'One or more systems inoperative');
@@ -187,7 +191,7 @@ $(document).ready(function () {
 // Functions for setting incidents/maintenance go below
 
 	var get_today = new Date();
-	get_today.setDate(get_today.getDate() - config.inciden_days);
+	get_today.setDate(get_today.getDate() - config.incident_days);
 	var scope_date = get_today.toISOString();
 
 	$.getJSON('https://api.github.com/repos/' + config.github.org + '/' + config.github.repo + '/issues?state=all&since=' + scope_date).done(GitHubEntry);

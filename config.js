@@ -18,11 +18,11 @@ var config = {
   },
   hcio: {
     checks: [ // Pull these from your settings page - select json view, copy paste
-      ['MixFlix','https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/Xjdq8VTf/domain.json'],
-      ['Plex','https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/3DcIO04e/plex.json'],
-      ['Requests','https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/LImRe2-D/requests.json'],
-      ['Search(M)','https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/ASUiO0Jp/search-m.json'],
-      ['Search(T)','https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/PgpYn-BN/search-t.json']
+      {name: 'MixFlix', url: 'https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/Xjdq8VTf/domain.json'},
+      {name: 'Plex', url: 'https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/3DcIO04e/plex.json'},
+      {name: 'Requests', url: 'https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/LImRe2-D/requests.json'},
+      {name: 'Search(M)', url: 'https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/ASUiO0Jp/search-m.json'},
+      {name: 'Search(T)', url: 'https://healthchecks.io/badge/5396a8fd-1fa1-4942-97f7-7ed1f4/PgpYn-BN/search-t.json'}
     ]
   },
   git_source: 'github', // Use this to choose which location you'd like to post - 'github' or 'gitlab' supported
