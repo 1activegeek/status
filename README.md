@@ -38,5 +38,6 @@ Check the [wiki](https://github.com/1activegeek/status/wiki) for details on conf
 * [x] ~~Report no maintenance scheduled if none exist~~
 * [x] ~~Reduce API calls to GH by combining incident/maintenance request~~
 
+[![Feature Requests](http://feathub.com/1activegeek/status?format=svg)](http://feathub.com/1activegeek/status)
 
 [MIT Licensed](https://raw.githubusercontent.com/flybaseio/status/gh-pages/LICENSE)
