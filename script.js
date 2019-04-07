@@ -7,7 +7,9 @@ $(document).ready(function () {
 				'm779757278-82acbbedc86d26ebbc129945',
 				'm779762016-33deea24d6a3e73e524d8ab0',
 				'm779870719-a710902a0c001a03244eac5e',
-				'm779870718-eada06ba00200d8ced148b37'
+				'm779870718-eada06ba00200d8ced148b37',
+				'm782308894-bcdc86c9df15aa07e7fc9d23',
+				'm782368466-43314d33f54484b66368c421'
 			],
 			logs: 1,
 			response_times: 1,
